@@ -58,8 +58,8 @@ namespace AzureTestWebApp2.RouteHandler
                     ODataResourceCollectionInfo collectionInfo = new ODataResourceCollectionInfo()
                     {
                         Name = "MsrRecurringQueries",
-                        Url = new Uri("http://localhost:31435/api/MsrRecurringQueryApis/" + recurringQuery.RecurringQueryID.ToString(), UriKind.Absolute)
-                       // Url = new Uri(context.Request.Url.ToString()+"/data/" + recurringQuery.RecurringQueryID.ToString(), UriKind.Absolute)
+                       // Url = new Uri("http://localhost:31435/api/MsrRecurringQueryApis/" + recurringQuery.RecurringQueryID.ToString(), UriKind.Absolute)
+                        Url = new Uri(context.Request.Url.ToString()+"/data/" + recurringQuery.RecurringQueryID.ToString(), UriKind.Absolute)
                     };
                     collectionInfo.SetAnnotation<AtomResourceCollectionMetadata>(new AtomResourceCollectionMetadata()
                     {
@@ -109,7 +109,7 @@ namespace AzureTestWebApp2.RouteHandler
         private ODataEntry GetODataEntry(MsrRecurringQuery recurringQuery)
         {
             ODataEntry entry = new ODataEntry();
-            entry.TypeName = "AzureTestWebDataLayer.MsrRecurringQuery";
+            entry.TypeName = "System.Type";
            
             List<ODataProperty> properties = new List<ODataProperty>();
             ODataProperty property = new ODataProperty()

@@ -11,7 +11,7 @@ using System.Web;
 using System.Web.Http.OData.Builder;
 using System.Reflection;
 using System.Reflection.Emit;
-
+using System.Linq.Expressions;
 
 namespace AzureTestWebApp2.HttpHandler
 {
@@ -59,24 +59,62 @@ namespace AzureTestWebApp2.HttpHandler
         }
 
         private static Microsoft.Data.Edm.IEdmModel BuildODataModel()
-          {
-             ODataModelBuilder modelBuilder = new ODataModelBuilder();
+        {
+            ODataModelBuilder modelBuilder = new ODataModelBuilder();
 
-             var entityTypeConfiguration = new EntityTypeConfiguration(modelBuilder, typeof(MsrRecurringQuery));
-             Type types = TypeBuilderNamespace.MyTypeBuilder.CompileResultType();
+
+            var myType = TypeBuilderNamespace.MyTypeBuilder.CompileResultType();
+            var entityTypeConfiguration = new EntityTypeConfiguration(modelBuilder, typeof(MsrRecurringQuery));
+
+            //  var item = Expression.Parameter(typeof(MsrRecurringQuery));
+
+            //property of my item, this is "item.Name"
+            //  var prop = Expression.Property(item, "RecurringQueryID");
+
+            //  var lambda = Expression.Lambda<Func<myType, int>>(prop, item);
+
+            // var lambda = CreateLambda(myType, prop, item);// Expression.Lambda<Func<myType, int>>(prop);
+
+
+            var customers = CreateEntitySet(new MsrRecurringQuery(), modelBuilder, "MsrRecurringQueries");
+
+            var propertyInfo = typeof(MsrRecurringQuery).GetProperties()[0];
+
+            entityTypeConfiguration.HasKey(propertyInfo);
+            propertyInfo = typeof(MsrRecurringQuery).GetProperties()[1];
+            entityTypeConfiguration.AddProperty(propertyInfo);
             
-             //EntitySetConfiguration customers = modelBuilder.AddEntitySet("MsrRecurringQueries",entityTypeConfiguration);
-            //modelBuilder.EntitySet<MsrRecurringQuery>("MsrRecurringQueries");
-             //EntitySetConfiguration customers = modelBuilder.AddEntitySet("MsrRecurringQueries", new EntityTypeConfiguration() { J});
-             var customers = modelBuilder.EntitySet<MsrRecurringQuery>("MsrRecurringQueries");
-             string s = string.Empty;
-             var myType = TypeBuilderNamespace.MyTypeBuilder.CompileResultType();
+            var customers1 = modelBuilder.AddEntitySet("MsrRecurringQueries1", entityTypeConfiguration);
 
-             TypeBuilderNamespace.MyTypeBuilder.CreateEntitySetFromSingle(myType);
-             //customers.EntityType.HasKey(typeof(MsrRecurringQuery).GetProperty("RecurringQueryID"));
-             customers.EntityType.HasKey(k => k.RecurringQueryID);
-             return modelBuilder.GetEdmModel();
-          }
+            Microsoft.Data.Edm.Library.EdmModel mainModel = new Microsoft.Data.Edm.Library.EdmModel();
+            var mainContainer = new EdmEntityContainer("mainNS", "MainContainer");
+           
+            var customerType = new EdmEntityType("mainNS", "Customer", null);
+            EdmStructuralProperty  s;
+            customerType.AddProperty(new   EdmStructuralProperty(customerType, "HomeAddress", new EdmPrimitiveTypeReference(EdmPrimitiveTypeKind. , false)));
+            mainModel.AddElement(customerType);
+            
+             var customerSet = new EdmEntitySet(mainContainer, "Customers", customerType);
+            mainContainer.AddElement(customerSet);
+            mainModel.AddElement(mainContainer);
+
+            return modelBuilder.GetEdmModel();
+        }
+
+        public static EntitySetConfiguration<MsrRecurringQuery> CreateEntitySet(
+          MsrRecurringQuery value, ODataModelBuilder modelBuilder, string entitySetName) //where T : class
+        {
+            var customers = modelBuilder.EntitySet<MsrRecurringQuery>(entitySetName);
+            //customers.EntityType.HasKey(c => typeof(MsrRecurringQuery).GetProperties()[1]);
+            customers.EntityType.HasKey(c =>c.RecurringQueryID);
+            return customers;
+        }
+
+        public static Expression<Func<T, int>> CreateLambda<T>(
+         T value, MemberExpression prop,ParameterExpression item) where T :class
+        {
+            return Expression.Lambda<Func<T, int>>(prop, item );
+        }
     }
 }
 
@@ -209,11 +247,8 @@ namespace TypeBuilderNamespace
           return list;
         }
 
-        public static void CreateEntitySetFromSingle<T>(T value) where T: class 
-        {
-            ODataModelBuilder modelBuilder = new ODataModelBuilder();
+      
 
-            modelBuilder.EntitySet<T>("NewName");
-        }
+      
     }
 }
