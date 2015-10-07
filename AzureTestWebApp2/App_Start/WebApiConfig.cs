@@ -43,7 +43,7 @@ namespace AzureTestWebApp2
             //config.Formatters.AddRange(odataFormatters);
 
 
-            
+
         }
     }
 }
