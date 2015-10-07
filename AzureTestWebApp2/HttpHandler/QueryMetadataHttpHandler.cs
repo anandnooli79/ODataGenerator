@@ -76,29 +76,31 @@ namespace AzureTestWebApp2.HttpHandler
             // var lambda = CreateLambda(myType, prop, item);// Expression.Lambda<Func<myType, int>>(prop);
 
 
-            var customers = CreateEntitySet(new MsrRecurringQuery(), modelBuilder, "MsrRecurringQueries");
+            //var customers = CreateEntitySet(new MsrRecurringQuery(), modelBuilder, "MsrRecurringQueries");
 
-            var propertyInfo = typeof(MsrRecurringQuery).GetProperties()[0];
+            //var propertyInfo = typeof(MsrRecurringQuery).GetProperties()[0];
 
-            entityTypeConfiguration.HasKey(propertyInfo);
-            propertyInfo = typeof(MsrRecurringQuery).GetProperties()[1];
-            entityTypeConfiguration.AddProperty(propertyInfo);
+            //entityTypeConfiguration.HasKey(propertyInfo);
+            //propertyInfo = typeof(MsrRecurringQuery).GetProperties()[1];
+            //entityTypeConfiguration.AddProperty(propertyInfo);
             
-            var customers1 = modelBuilder.AddEntitySet("MsrRecurringQueries1", entityTypeConfiguration);
+            //var customers1 = modelBuilder.AddEntitySet("MsrRecurringQueries1", entityTypeConfiguration);
 
             Microsoft.Data.Edm.Library.EdmModel mainModel = new Microsoft.Data.Edm.Library.EdmModel();
             var mainContainer = new EdmEntityContainer("mainNS", "MainContainer");
            
-            var customerType = new EdmEntityType("mainNS", "Customer", null);
-            EdmStructuralProperty  s;
-            customerType.AddProperty(new   EdmStructuralProperty(customerType, "HomeAddress", new EdmPrimitiveTypeReference(EdmPrimitiveTypeKind. , false)));
-            mainModel.AddElement(customerType);
+            var msrRecurringQueryType = new EdmEntityType("mainNS", "MsrRecurringQuery", null);
+            IEdmPrimitiveType edmPrimitiveType = new MSRAEdmPrimitiveType("Int32", "Edm", EdmPrimitiveTypeKind.Int32, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+            msrRecurringQueryType.AddKeys(new EdmStructuralProperty(msrRecurringQueryType, "RecurringQueryID", new EdmPrimitiveTypeReference(edmPrimitiveType, false)));
+            msrRecurringQueryType.AddProperty(new EdmStructuralProperty(msrRecurringQueryType, "RecurringQueryID", new EdmPrimitiveTypeReference(edmPrimitiveType, false)));
+            mainModel.AddElement(msrRecurringQueryType);
             
-             var customerSet = new EdmEntitySet(mainContainer, "Customers", customerType);
+             var customerSet = new EdmEntitySet(mainContainer, "MsrRecurringQueries", msrRecurringQueryType);
             mainContainer.AddElement(customerSet);
             mainModel.AddElement(mainContainer);
 
-            return modelBuilder.GetEdmModel();
+            return mainModel;
+            //return modelBuilder.GetEdmModel();
         }
 
         public static EntitySetConfiguration<MsrRecurringQuery> CreateEntitySet(
@@ -114,6 +116,62 @@ namespace AzureTestWebApp2.HttpHandler
          T value, MemberExpression prop,ParameterExpression item) where T :class
         {
             return Expression.Lambda<Func<T, int>>(prop, item );
+        }
+    }
+
+    public class MSRAEdmPrimitiveType : IEdmPrimitiveType
+    {
+        string _name = string.Empty;
+        string _namesSpace = string.Empty;
+        EdmPrimitiveTypeKind _primitiveKind = EdmPrimitiveTypeKind.String;
+        EdmTypeKind _typeKind = EdmTypeKind.Primitive;
+        EdmSchemaElementKind _schemaElementKind = EdmSchemaElementKind.None;
+        public MSRAEdmPrimitiveType(string name,string namesSpace, EdmPrimitiveTypeKind primitiveKind, EdmSchemaElementKind schemaElementKind, EdmTypeKind typeKind )
+        {
+            _name = name;
+            _namesSpace = namesSpace;
+            _primitiveKind = primitiveKind;
+            _typeKind = typeKind;
+            _schemaElementKind = schemaElementKind;
+        }
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+        }
+
+        public string Namespace
+        {
+            get
+            {
+                return _namesSpace;
+            }
+        }
+
+        public EdmPrimitiveTypeKind PrimitiveKind
+        {
+            get
+            {
+                return _primitiveKind;
+            }
+        }
+
+        public EdmSchemaElementKind SchemaElementKind
+        {
+            get
+            {
+                return _schemaElementKind;
+            }
+        }
+
+        public EdmTypeKind TypeKind
+        {
+            get
+            {
+                return _typeKind;
+            }
         }
     }
 }
