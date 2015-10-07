@@ -49,6 +49,7 @@ namespace AzureTestWebApp2.RouteHandler
 
                 AzureTestDBEntities db = new AzureTestDBEntities();
                 var queries = db.MsrRecurringQueries.ToList().Take(1);
+                
                 ODataWorkspace workSpace = new ODataWorkspace();
                 var collections = new List<ODataResourceCollectionInfo>();
 
@@ -93,8 +94,8 @@ namespace AzureTestWebApp2.RouteHandler
                     feedWriter.WriteStart(feed);
 
                     AzureTestDBEntities db = new AzureTestDBEntities();
-                    var queries = db.MsrRecurringQueries.ToList().Where(c=>c.RecurringQueryID == Convert.ToInt32(this.QueryId)) ;
-                    foreach (MsrRecurringQuery recurringQuery in queries)
+                    var queries = db.T_annooli_231161891 ;
+                    foreach (var recurringQuery in queries)
                     {
                         ODataEntry entry = this.GetODataEntry(recurringQuery);
                         feedWriter.WriteStart(entry);
@@ -105,7 +106,7 @@ namespace AzureTestWebApp2.RouteHandler
             }
         }
 
-        private ODataEntry GetODataEntry(MsrRecurringQuery recurringQuery)
+        private ODataEntry GetODataEntry(T_annooli_231161891  recurringQuery)
         {
             ODataEntry entry = new ODataEntry();
             entry.TypeName = "mainNS.MsrRecurringQuery";
@@ -113,12 +114,49 @@ namespace AzureTestWebApp2.RouteHandler
             List<ODataProperty> properties = new List<ODataProperty>();
             ODataProperty property = new ODataProperty()
             {
-                Name = "RecurringQueryID",
-                Value = recurringQuery.RecurringQueryID,
+                Name = "RowId",
+                Value = recurringQuery.RowId,
             };
             
             properties.Add(property);
+            property = new ODataProperty()
+            {
+                Name = "Pricing_Level",
+                Value = recurringQuery.Pricing_Level,
+            };
 
+            properties.Add(property);
+            property = new ODataProperty()
+            {
+                Name = "Business_Summary",
+                Value = recurringQuery.Business_Summary,
+            };
+
+            properties.Add(property);
+
+            property = new ODataProperty()
+            {
+                Name = "Future_Flag",
+                Value = recurringQuery.Future_Flag,
+            };
+
+            properties.Add(property);
+
+            property = new ODataProperty()
+            {
+                Name = "Fiscal_Month",
+                Value = recurringQuery.Fiscal_Month,
+            };
+
+            properties.Add(property);
+
+            property = new ODataProperty()
+            {
+                Name = "MS_Sales_Amount_Const",
+                Value = recurringQuery.MS_Sales_Amount_Const,
+            };
+
+            properties.Add(property);
             //ODataProperty property1 = new ODataProperty()
             //{
             //    Name = "AttributeFilters",

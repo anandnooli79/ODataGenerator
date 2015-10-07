@@ -27,5 +27,6 @@ namespace AzureTestWebDataLayer
     
         public virtual DbSet<MsrRecurringQuery> MsrRecurringQueries { get; set; }
         public virtual DbSet<Query> Queries { get; set; }
+        public virtual DbSet<T_annooli_231161891> T_annooli_231161891 { get; set; }
     }
 }

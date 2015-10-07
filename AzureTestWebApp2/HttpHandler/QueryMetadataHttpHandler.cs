@@ -89,13 +89,24 @@ namespace AzureTestWebApp2.HttpHandler
             Microsoft.Data.Edm.Library.EdmModel mainModel = new Microsoft.Data.Edm.Library.EdmModel();
             var mainContainer = new EdmEntityContainer("mainNS", "MainContainer");
            
-            var msrRecurringQueryType = new EdmEntityType("mainNS", "MsrRecurringQuery", null);
-            IEdmPrimitiveType edmPrimitiveType = new MSRAEdmPrimitiveType("Int32", "Edm", EdmPrimitiveTypeKind.Int32, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
-            msrRecurringQueryType.AddKeys(new EdmStructuralProperty(msrRecurringQueryType, "RecurringQueryID", new EdmPrimitiveTypeReference(edmPrimitiveType, false)));
-            msrRecurringQueryType.AddProperty(new EdmStructuralProperty(msrRecurringQueryType, "RecurringQueryID", new EdmPrimitiveTypeReference(edmPrimitiveType, false)));
-            mainModel.AddElement(msrRecurringQueryType);
+            var msrRecurringQueryResultType = new EdmEntityType("mainNS", "MsrRecurringQuery", null);
+            IEdmPrimitiveType edmPrimitiveType1 = new MSRAEdmPrimitiveType("Int32", "Edm", EdmPrimitiveTypeKind.Int32, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+            IEdmPrimitiveType edmPrimitiveType2 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+            IEdmPrimitiveType edmPrimitiveType3 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+            IEdmPrimitiveType edmPrimitiveType4 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+            IEdmPrimitiveType edmPrimitiveType5 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+            IEdmPrimitiveType edmPrimitiveType6 = new MSRAEdmPrimitiveType("Decimal", "Edm", EdmPrimitiveTypeKind.Decimal, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+            msrRecurringQueryResultType.AddKeys(new EdmStructuralProperty(msrRecurringQueryResultType, "RowId", new EdmPrimitiveTypeReference(edmPrimitiveType1, false)));
+            msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "RowId", new EdmPrimitiveTypeReference(edmPrimitiveType1, false)));
+
+            msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Pricing_Level", new EdmPrimitiveTypeReference(edmPrimitiveType2, false)));
+            msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Business_Summary", new EdmPrimitiveTypeReference(edmPrimitiveType3, false)));
+            msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Future_Flag", new EdmPrimitiveTypeReference(edmPrimitiveType4, false)));
+            msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Fiscal_Month", new EdmPrimitiveTypeReference(edmPrimitiveType5, false)));
+            msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "MS_Sales_Amount_Const", new EdmPrimitiveTypeReference(edmPrimitiveType6, false)));
+            mainModel.AddElement(msrRecurringQueryResultType);
             
-             var customerSet = new EdmEntitySet(mainContainer, "MsrRecurringQueries", msrRecurringQueryType);
+             var customerSet = new EdmEntitySet(mainContainer, "MsrRecurringQueries", msrRecurringQueryResultType);
             mainContainer.AddElement(customerSet);
             mainModel.AddElement(mainContainer);
 

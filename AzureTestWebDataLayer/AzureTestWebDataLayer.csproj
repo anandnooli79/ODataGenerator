@@ -71,6 +71,9 @@
     <Compile Include="Query.cs">
       <DependentUpon>AzuretestdbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="T_annooli_231161891.cs">
+      <DependentUpon>AzuretestdbModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="AzuretestdbModel.edmx">

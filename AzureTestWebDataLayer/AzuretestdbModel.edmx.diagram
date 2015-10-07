@@ -7,6 +7,7 @@
       <Diagram DiagramId="f529efe6726c41e58e7258df35580ceb" Name="Diagram1">
         <EntityTypeShape EntityType="AzureTestDBModel.MsrRecurringQuery" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="AzureTestDBModel.Query" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="AzureTestDBModel.T_annooli_231161891" Width="1.5" PointX="0.75" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

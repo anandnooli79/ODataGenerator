@@ -31,8 +31,20 @@ warning 6002: The table/view 'AzureTestDB.dbo.Query' does not have a primary key
           <Property Name="SelectedAttributes" Type="varchar" MaxLength="3000" Nullable="false" />
           <Property Name="AttributeFilters" Type="ntext" Nullable="false" />
         </EntityType>
+        <EntityType Name="T_annooli_231161891">
+          <Key>
+            <PropertyRef Name="RowId" />
+          </Key>
+          <Property Name="RowId" Type="int" Nullable="false" />
+          <Property Name="Pricing Level" Type="varchar" MaxLength="50" />
+          <Property Name="Business Summary" Type="varchar" MaxLength="35" />
+          <Property Name="Future Flag" Type="varchar" MaxLength="35" />
+          <Property Name="Fiscal Month" Type="varchar" MaxLength="18" />
+          <Property Name="MS Sales Amount Const" Type="money" />
+        </EntityType>
         <EntityContainer Name="AzureTestDBModelStoreContainer">
           <EntitySet Name="MsrRecurringQuery" EntityType="Self.MsrRecurringQuery" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_annooli_231161891" EntityType="Self.T_annooli_231161891" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Query" EntityType="Self.Query" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Query].[RecurringQueryID] AS [RecurringQueryID], 
@@ -60,6 +72,7 @@ warning 6002: The table/view 'AzureTestDB.dbo.Query' does not have a primary key
         <EntityContainer Name="AzureTestDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="MsrRecurringQueries" EntityType="Self.MsrRecurringQuery" />
           <EntitySet Name="Queries" EntityType="AzureTestDBModel.Query" />
+          <EntitySet Name="T_annooli_231161891" EntityType="AzureTestDBModel.T_annooli_231161891" />
         </EntityContainer>
         <EntityType Name="Query">
           <Key>
@@ -74,6 +87,17 @@ warning 6002: The table/view 'AzureTestDB.dbo.Query' does not have a primary key
           <Property Name="PerspectiveId" Type="Int16" Nullable="false" />
           <Property Name="SelectedAttributes" Type="String" Nullable="false" MaxLength="3000" FixedLength="false" Unicode="false" />
           <Property Name="AttributeFilters" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="T_annooli_231161891">
+          <Key>
+            <PropertyRef Name="RowId" />
+          </Key>
+          <Property Name="RowId" Type="Int32" Nullable="false" />
+          <Property Name="Pricing_Level" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Business_Summary" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="Future_Flag" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <Property Name="Fiscal_Month" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="MS_Sales_Amount_Const" Type="Decimal" Precision="19" Scale="4" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -100,6 +124,18 @@ warning 6002: The table/view 'AzureTestDB.dbo.Query' does not have a primary key
                 <ScalarProperty Name="PerspectiveId" ColumnName="PerspectiveId" />
                 <ScalarProperty Name="RecurringQueryName" ColumnName="RecurringQueryName" />
                 <ScalarProperty Name="RecurringQueryID" ColumnName="RecurringQueryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_annooli_231161891">
+            <EntityTypeMapping TypeName="AzureTestDBModel.T_annooli_231161891">
+              <MappingFragment StoreEntitySet="T_annooli_231161891">
+                <ScalarProperty Name="MS_Sales_Amount_Const" ColumnName="MS Sales Amount Const" />
+                <ScalarProperty Name="Fiscal_Month" ColumnName="Fiscal Month" />
+                <ScalarProperty Name="Future_Flag" ColumnName="Future Flag" />
+                <ScalarProperty Name="Business_Summary" ColumnName="Business Summary" />
+                <ScalarProperty Name="Pricing_Level" ColumnName="Pricing Level" />
+                <ScalarProperty Name="RowId" ColumnName="RowId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
