@@ -12,6 +12,9 @@ using System.Web.Http.OData.Builder;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Linq.Expressions;
+using System.Web.Mvc;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.OpenIdConnect;
 
 namespace AzureTestWebApp2.HttpHandler
 {
@@ -28,8 +31,15 @@ namespace AzureTestWebApp2.HttpHandler
         {
             this.ContextBase = context;
         }
+
+       
         public void ProcessRequest(HttpContext context)
         {
+            if (!HttpContext.Current.Request.IsAuthenticated)
+            {
+                HttpContext.Current.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = HttpContext.Current.Request.FilePath }, OpenIdConnectAuthenticationDefaults.AuthenticationType);
+                return;
+            }
             MSRAHttpResponseMessage message = new MSRAHttpResponseMessage(this.ContextBase.Response);
             message.StatusCode = 200;
 
