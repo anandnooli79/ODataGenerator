@@ -63,42 +63,6 @@ namespace AzureTestWebApp2.Controllers
     }
 
 
-    internal class ResponseMessage : IODataResponseMessage
-    {
-        private readonly Stream stream;
-        private readonly Dictionary<string, string> headers = new Dictionary<string, string>();
-
-        public ResponseMessage(Stream stream)
-        {
-            this.stream = stream;
-        }
-
-        public string GetHeader(string headerName)
-        {
-            string value;
-
-            return this.headers.TryGetValue(headerName, out value) ? value : null;
-        }
-
-        public void SetHeader(string headerName, string headerValue)
-        {
-            this.headers.Add(headerName, headerValue);
-        }
-
-        public Stream GetStream()
-        {
-            return this.stream;
-        }
-
-        public IEnumerable<KeyValuePair<string, string>> Headers
-        {
-            get { return this.headers; }
-        }
-
-        public int StatusCode { get; set; }
-    }
-
-
     public class Record
     {
 

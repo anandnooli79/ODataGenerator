@@ -1,5 +1,8 @@
 ﻿using AzureTestWebApp2.Controllers;
+using AzureTestWebApp2.HttpHandler;
 using AzureTestWebDataLayer;
+using Microsoft.Data.Edm;
+using Microsoft.Data.Edm.Library;
 using Microsoft.Data.OData;
 using Microsoft.Data.OData.Atom;
 using Microsoft.Owin.Security;
@@ -32,14 +35,14 @@ namespace AzureTestWebApp2.RouteHandler
 
         public void ProcessRequest(HttpContext context)
         {
-            if (!HttpContext.Current.Request.IsAuthenticated)
-            {
-                HttpContext.Current.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = HttpContext.Current.Request.FilePath }, OpenIdConnectAuthenticationDefaults.AuthenticationType);
-                return;
-            }
+            //    if (!HttpContext.Current.Request.IsAuthenticated)
+            //    {
+            //        HttpContext.Current.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = HttpContext.Current.Request.FilePath }, OpenIdConnectAuthenticationDefaults.AuthenticationType);
+            //        return;
+            //    }
             MSRAHttpResponseMessage message = new MSRAHttpResponseMessage(this.ContextBase.Response);
             message.StatusCode = 200;
-            message.SetHeader(ODataConstants.ContentTypeHeader, "application/atom+xml");
+            message.SetHeader(ODataConstants.ContentTypeHeader, "application/json");
             // create the writer, indent for readability
             ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
             {
@@ -48,13 +51,11 @@ namespace AzureTestWebApp2.RouteHandler
                 BaseUri = context.Request.Url
 
             };
+            messageWriterSettings.SetContentType(ODataFormat.Json);
+           messageWriterSettings.SetMetadataDocumentUri(new Uri("http://localhost:31435/odata/MSRAQuery/$metadata"));
 
-           
             if (string.IsNullOrEmpty(QueryId))
             {
-               
-
-
                 AzureTestDBEntities db = new AzureTestDBEntities();
                 var queries = db.MsrRecurringQueries.ToList().Take(1);
                 
@@ -84,15 +85,32 @@ namespace AzureTestWebApp2.RouteHandler
 
                 using (ODataMessageWriter messageWriter = new ODataMessageWriter(message, messageWriterSettings))
                 {
-                    messageWriter.WriteServiceDocument(workSpace);
+                    messageWriter.WriteServiceDocumentAsync(workSpace);
                 }
             }
 
             else
             {
-                using (ODataMessageWriter messageWriter = new ODataMessageWriter(message, messageWriterSettings))
+                EdmModel mainModel =(EdmModel) QueryMetadataHttpHandler.BuildODataModel();
+                using (ODataMessageWriter messageWriter = new ODataMessageWriter(message, messageWriterSettings, mainModel))
                 {
-                    ODataWriter feedWriter = messageWriter.CreateODataFeedWriter();
+                    var msrRecurringQueryResultType = new EdmEntityType("mainNS", "MsrRecurringQuery", null);
+                    IEdmPrimitiveType edmPrimitiveType1 = new MSRAEdmPrimitiveType("Int32", "Edm", EdmPrimitiveTypeKind.Int32, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+                    IEdmPrimitiveType edmPrimitiveType2 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+                    IEdmPrimitiveType edmPrimitiveType3 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+                    IEdmPrimitiveType edmPrimitiveType4 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+                    IEdmPrimitiveType edmPrimitiveType5 = new MSRAEdmPrimitiveType("String", "Edm", EdmPrimitiveTypeKind.String, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+                    IEdmPrimitiveType edmPrimitiveType6 = new MSRAEdmPrimitiveType("Decimal", "Edm", EdmPrimitiveTypeKind.Decimal, EdmSchemaElementKind.TypeDefinition, EdmTypeKind.Primitive);
+                    msrRecurringQueryResultType.AddKeys(new EdmStructuralProperty(msrRecurringQueryResultType, "RowId", new EdmPrimitiveTypeReference(edmPrimitiveType1, false)));
+                    msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "RowId", new EdmPrimitiveTypeReference(edmPrimitiveType1, false)));
+
+                    msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Pricing_Level", new EdmPrimitiveTypeReference(edmPrimitiveType2, false)));
+                    msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Business_Summary", new EdmPrimitiveTypeReference(edmPrimitiveType3, false)));
+                    msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Future_Flag", new EdmPrimitiveTypeReference(edmPrimitiveType4, false)));
+                    msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "Fiscal_Month", new EdmPrimitiveTypeReference(edmPrimitiveType5, false)));
+                    msrRecurringQueryResultType.AddProperty(new EdmStructuralProperty(msrRecurringQueryResultType, "MS_Sales_Amount_Const", new EdmPrimitiveTypeReference(edmPrimitiveType6, false)));
+                    ODataWriter feedWriter = messageWriter.CreateODataFeedWriter(
+                        mainModel.EntityContainers().Select(c => c.EntitySets().First()).First(), msrRecurringQueryResultType);
                     ODataFeed feed = new ODataFeed()
                     {
                         Id = "MsrRecurringQueries",
@@ -113,6 +131,7 @@ namespace AzureTestWebApp2.RouteHandler
                 }
             }
         }
+
 
         private ODataEntry GetODataEntry(T_annooli_231161891  recurringQuery)
         {
