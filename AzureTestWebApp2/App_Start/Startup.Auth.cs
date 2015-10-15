@@ -27,6 +27,7 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using System.Configuration;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.Owin.Security.ActiveDirectory;
 
 namespace AzureTestWebApp2
 {
@@ -48,53 +49,52 @@ namespace AzureTestWebApp2
 
         public void ConfigureAuth(IAppBuilder app)
         {
-            ////app.Run(context =>
-            ////{
-            ////    return Task.FromResult(0);
-            ////});
-            //app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
-
-            //app.UseCookieAuthentication(new CookieAuthenticationOptions());
-            
-            //app.UseOpenIdConnectAuthentication(
-            //    new OpenIdConnectAuthenticationOptions
-            //    {
-            //        ClientId = clientId,
-            //        Authority = authority,
-            //        PostLogoutRedirectUri = postLogoutRedirectUri,
-            //        Notifications = new OpenIdConnectAuthenticationNotifications
-            //        {
-            //            AuthenticationFailed = context =>
-            //            {
-            //                context.HandleResponse();
-            //                context.Response.Redirect("/Error?message=" + context.Exception.Message);
-            //                return Task.FromResult(0);
-            //            },
-            //            SecurityTokenReceived = context =>
-            //           {
-            //               return Task.FromResult(0);
-            //           },
-            //            AuthorizationCodeReceived = context =>
-            //             {
-            //                 return Task.FromResult(0);
-            //             },
-            //            MessageReceived = context =>
-            //            {
-            //                return Task.FromResult(0);
-            //            }
-
-
-            //        }
-            //    });
-
-            //app.Use((context, next) =>
+            //app.Run(context =>
             //{
-            //    if (!HttpContext.Current.Request.IsAuthenticated)
-            //    {
-            //        HttpContext.Current.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = HttpContext.Current.Request.FilePath }, OpenIdConnectAuthenticationDefaults.AuthenticationType);
-            //    }
-            //    return next.Invoke();
+            //    return Task.FromResult(0);
             //});
+            app.SetDefaultSignInAsAuthenticationType(CookieAuthenticationDefaults.AuthenticationType);
+
+            app.UseCookieAuthentication(new CookieAuthenticationOptions());
+
+            app.UseOpenIdConnectAuthentication(
+                new OpenIdConnectAuthenticationOptions
+                {
+                    ClientId = clientId,
+                    Authority = authority,
+                    PostLogoutRedirectUri = postLogoutRedirectUri,
+                    Notifications = new OpenIdConnectAuthenticationNotifications
+                    {
+                        AuthenticationFailed = context =>
+                        {
+                            context.HandleResponse();
+                            context.Response.Redirect("/Error?message=" + context.Exception.Message);
+                            return Task.FromResult(0);
+                        },
+                        SecurityTokenReceived = context =>
+                       {
+                           return Task.FromResult(0);
+                       },
+                        AuthorizationCodeReceived = context =>
+                         {
+                             return Task.FromResult(0);
+                         },
+                        MessageReceived = context =>
+                        {
+                            return Task.FromResult(0);
+                        }
+
+
+                    }
+                });
+
+            app.UseWindowsAzureActiveDirectoryBearerAuthentication(
+            new WindowsAzureActiveDirectoryBearerAuthenticationOptions
+            {
+                Audience = "http://anandmsraazuretest.azurewebsites.net/",
+                Tenant = "microsoft.com",
+                AuthenticationType = "OAuth2Bearer",
+            });
 
 
         }

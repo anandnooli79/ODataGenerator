@@ -6,6 +6,7 @@ using Microsoft.Data.Edm.Library;
 using Microsoft.Data.OData;
 using Microsoft.Data.OData.Atom;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.ActiveDirectory;
 using Microsoft.Owin.Security.OpenIdConnect;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
 
 namespace AzureTestWebApp2.RouteHandler
@@ -35,11 +37,11 @@ namespace AzureTestWebApp2.RouteHandler
 
         public void ProcessRequest(HttpContext context)
         {
-            //    if (!HttpContext.Current.Request.IsAuthenticated)
-            //    {
-            //        HttpContext.Current.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = HttpContext.Current.Request.FilePath }, OpenIdConnectAuthenticationDefaults.AuthenticationType);
-            //        return;
-            //    }
+            if (!HttpContext.Current.Request.IsAuthenticated)
+            {
+                HttpContext.Current.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = HttpContext.Current.Request.FilePath }, "OAuth2Bearer");
+                return;
+            }
             MSRAHttpResponseMessage message = new MSRAHttpResponseMessage(this.ContextBase.Response);
             message.StatusCode = 200;
             message.SetHeader(ODataConstants.ContentTypeHeader, "application/json");

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureTestWebDataLayer", "Az
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureTestWebApp2", "AzureTestWebApp2\AzureTestWebApp2.csproj", "{590E9D13-D7B1-4CE9-8B9E-E5C326910C4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureTestWebClient", "AzureTestWebClient\AzureTestWebClient.csproj", "{F23213A9-F03B-4518-825F-6DB2B34C5545}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{590E9D13-D7B1-4CE9-8B9E-E5C326910C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{590E9D13-D7B1-4CE9-8B9E-E5C326910C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{590E9D13-D7B1-4CE9-8B9E-E5C326910C4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F23213A9-F03B-4518-825F-6DB2B34C5545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23213A9-F03B-4518-825F-6DB2B34C5545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23213A9-F03B-4518-825F-6DB2B34C5545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23213A9-F03B-4518-825F-6DB2B34C5545}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
